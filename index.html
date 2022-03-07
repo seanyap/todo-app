@@ -22,20 +22,25 @@
 
 <body class="container">
   <h1>To Do List</h1>
-  <div class="row gap-4">
-    <div id="todo" class="col shadow">
-      <h2>Do</h2>
-      <ul>
-        <li>
-          <input type="checkbox" name="checkbox">
-          <label>item 1</label>
-        </li>
-      </ul>
-      <!-- <p id="addTaskBtn">+ Add task</p> -->
+  <div class="row row-cols-1 row-cols-md-2">
+    <!-- additional col wrapper to add spacing between columns, using gutter spacing -->
+    <div class="col">
+      <div id="todo" class="col-12 shadow">
+        <h2>Do</h2>
+        <ul>
+          <li>
+            <input type="checkbox" name="checkbox">
+            <label>item 1</label>
+          </li>
+        </ul>
+        <!-- <p id="addTaskBtn">+ Add task</p> -->
+      </div>
     </div>
-    <div id="done" class="col shadow">
-      <h2>Done</h2>
-      <ul></ul>
+    <div class="col mt-4 mt-md-0">
+      <div id="done" class="col-12 shadow">
+        <h2>Done</h2>
+        <ul></ul>
+      </div>
     </div>
   </div>
 </body>
