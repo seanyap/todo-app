@@ -7,7 +7,19 @@ const addTaskBtn = document.getElementById("addTask");
 const todoList = document.getElementById("todoList");
 
 addTaskBtn.addEventListener("click", (event) => {
-  todoList.appendChild(createListElement("item 1"));
+  const inputElem = document.getElementById("taskInput");
+  const popover = new bootstrap.Popover(inputElem);
+
+  // create list element only if user filled up task name else prompt user
+  if (inputElem.value) {
+    todoList.appendChild(createListElement(inputElem.value));
+    inputElem.value = "";
+    popover.hide();
+    document.getElementById("closeModal").click();
+  } else {
+    // show popup to prompt user to input task name
+    popover.show();
+  }
 });
 
 function handleCheck(event) {
