@@ -47,6 +47,10 @@ input[type="checkbox"] {
   /* transition-duration: 1s; */
 }
 
+input[type="checkbox"]:hover {
+  border: 1px solid #b3eab3;
+}
+
 input[type="checkbox"]:checked {
   content: url("./assets/flaticon-checkbox.png");
   border: none;
