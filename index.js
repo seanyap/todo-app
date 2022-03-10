@@ -26,7 +26,6 @@ addTaskBtn.addEventListener("click", (event) => {
 function handleCheck(event) {
   const checkbox = event.target;
   const label = event.target.nextElementSibling;
-  console.log(label);
   if (checkbox.classList.contains("unchecked")) {
     checkbox.classList.remove("unchecked");
     checkbox.classList.add("checked");
@@ -88,6 +87,7 @@ function createListElement(label, listID, dueDate) {
   task.id = "task-" + listID;
   task.classList.add("row");
   task.classList.add("align-items-center");
+  task.classList.add("g-0");
   task.classList.add("taskBox");
   task.addEventListener("mouseenter", function (event) {
     document.getElementById(`edit-${listID}`).style.visibility = "visible";
@@ -121,6 +121,17 @@ function createTaskModal(modalID, labelValue) {
   const taskInput = document.createElement("input");
   const dateLabel = document.createElement("label");
   const dateInput = document.createElement("input");
+  const dropdownContainer = document.createElement("div");
+  const dropdownBtn = document.createElement("button");
+  const dropdownMenu = document.createElement("ul");
+
+  const priorityLowList = document.createElement("li");
+  const priorityMediumList = document.createElement("li");
+  const priorityHighList = document.createElement("li");
+  const priorityLowLink = document.createElement("a");
+  const priorityMediumLink = document.createElement("a");
+  const priorityHighLink = document.createElement("a");
+
   const updateBtn = document.createElement("button");
   const deleteBtn = document.createElement("button");
 
@@ -150,13 +161,45 @@ function createTaskModal(modalID, labelValue) {
   taskName.classList.add("g-0");
   taskInput.id = "input-" + modalID;
   taskInput.value = labelValue;
-  // taskInput.classList.add("col-11");
 
   dateLabel.textContent = "Due Date: ";
   dateLabel.classList.add("g-0");
   dateInput.type = "date";
   dateInput.id = "inputdate-" + modalID;
-  // dateInput.classList.add("col-11");
+
+  dropdownContainer.classList.add("dropdown");
+  dropdownContainer.classList.add("g-0");
+  dropdownContainer.classList.add("mt-2");
+  dropdownBtn.classList.add("btn");
+  dropdownBtn.classList.add("btn-secondary");
+  dropdownBtn.classList.add("dropdown-toggle");
+  dropdownBtn.type = "button";
+  dropdownBtn.id = `dropdown-${modalID}`;
+  dropdownBtn.setAttribute("data-bs-toggle", "dropdown");
+  dropdownBtn.textContent = "Priority";
+  dropdownBtn.classList.add("w-100");
+  dropdownMenu.classList.add("dropdown-menu");
+  dropdownMenu.setAttribute("aria-labelledby", `dropdown-${modalID}`);
+  priorityLowLink.classList.add("dropdown-item");
+  priorityLowLink.text = "Low";
+  priorityMediumLink.classList.add("dropdown-item");
+  priorityMediumLink.text = "Medium";
+  priorityHighLink.classList.add("dropdown-item");
+  priorityHighLink.text = "High";
+
+  priorityLowList.appendChild(priorityLowLink);
+  priorityLowLink.addEventListener("click", updatePriority);
+  priorityMediumList.appendChild(priorityMediumLink);
+  priorityMediumLink.addEventListener("click", updatePriority);
+  priorityHighList.appendChild(priorityHighLink);
+  priorityHighLink.addEventListener("click", updatePriority);
+
+  dropdownMenu.appendChild(priorityLowList);
+  dropdownMenu.appendChild(priorityMediumList);
+  dropdownMenu.appendChild(priorityHighList);
+
+  dropdownContainer.appendChild(dropdownBtn);
+  dropdownContainer.appendChild(dropdownMenu);
 
   updateBtn.textContent = "Update";
   updateBtn.type = "button";
@@ -167,7 +210,7 @@ function createTaskModal(modalID, labelValue) {
   deleteBtn.textContent = "Delete";
   deleteBtn.type = "button";
   deleteBtn.classList.add("btn");
-  deleteBtn.classList.add("btn-primary");
+  deleteBtn.classList.add("btn-danger");
   deleteBtn.addEventListener("click", handleDeleteTask);
 
   modalHeader.appendChild(heading);
@@ -176,6 +219,7 @@ function createTaskModal(modalID, labelValue) {
   modalBody.appendChild(taskInput);
   modalBody.appendChild(dateLabel);
   modalBody.appendChild(dateInput);
+  modalBody.appendChild(dropdownContainer);
   modalFooter.appendChild(deleteBtn);
   modalFooter.appendChild(updateBtn);
 
@@ -202,16 +246,27 @@ function handleUpdateTask(event) {
       -1
     );
   const newTask = document.getElementById(`input-${id}`);
+  const listElem = document.getElementById(`task-${id}`);
   const labelElem = document.getElementById(`label-${id}`);
   const inputDate = document.getElementById(`inputdate-${id}`);
+  const dropdownBtn = document.getElementById(`dropdown-${id}`);
 
   labelElem.textContent = newTask.value;
   // check if user enters a date
   if (inputDate) {
     const dateElem = document.getElementById(`due-${id}`);
-    dateElem.textContent = "Due: " + inputDate.value;
+    dateElem.textContent = inputDate.value ? "Due: " + inputDate.value : "";
   }
-
+  // check if user selected priority for task
+  if (dropdownBtn.textContent !== "Priority") {
+    if (dropdownBtn.textContent === "Low Priority") {
+      listElem.style.backgroundColor = "#A8E10C";
+    } else if (dropdownBtn.textContent === "Medium Priority") {
+      listElem.style.backgroundColor = "#FFDB15";
+    } else {
+      listElem.style.backgroundColor = "#FF5765";
+    }
+  }
   document.getElementById(`close-${id}`).click(); //close modal window
 }
 
@@ -222,4 +277,10 @@ function handleDeleteTask(event) {
     );
   document.getElementById(`close-${id}`).click(); //close modal window
   document.getElementById(`task-${id}`).remove();
+}
+
+function updatePriority(event) {
+  const priority = event.target.text;
+  const dropdownBtn = event.target.parentElement.parentElement.previousSibling;
+  dropdownBtn.textContent = priority + " Priority";
 }
