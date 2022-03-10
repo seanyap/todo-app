@@ -260,11 +260,11 @@ function handleUpdateTask(event) {
   // check if user selected priority for task
   if (dropdownBtn.textContent !== "Priority") {
     if (dropdownBtn.textContent === "Low Priority") {
-      listElem.style.backgroundColor = "#A8E10C";
+      listElem.style.borderColor = "#A8E10C";
     } else if (dropdownBtn.textContent === "Medium Priority") {
-      listElem.style.backgroundColor = "#FFDB15";
+      listElem.style.borderColor = "#FFDB15";
     } else {
-      listElem.style.backgroundColor = "#FF5765";
+      listElem.style.borderColor = "#FF5765";
     }
   }
   document.getElementById(`close-${id}`).click(); //close modal window
