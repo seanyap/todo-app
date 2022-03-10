@@ -14,15 +14,14 @@ body {
   border-radius: 10px;
 }
 
-#todo ul,
+/* #todo ul,
 #done ul {
   margin: 0;
-  padding: 0; /*reset bootstrap auto left pad*/
-}
+  padding: 0; /reset bootstrap auto left pad/
+} */
 
-#todo li,
-#done li {
-  list-style: none;
+#todo #taskBox,
+#done #taskBox {
   padding: 15px;
   border: 2px solid #eee;
   border-radius: 10px;
@@ -30,19 +29,10 @@ body {
   position: relative;
 }
 
-input[type="checkbox"] {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+#checkbox {
+  /* outline: none; */
   width: 25px;
   height: 25px;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -o-appearance: none;
-  appearance: none;
-  border: 1px solid #ccc;
-  border-radius: 100%;
-  outline: none;
   cursor: pointer;
   /* transition-duration: 1s; */
 }
@@ -53,14 +43,14 @@ input[type="checkbox"]:hover {
 
 input[type="checkbox"]:checked {
   content: url("./assets/flaticon-checkbox.png");
-  border: none;
+  /* border: none; */
 }
 
-li:hover {
+#taskBox:hover {
   background-color: #eee;
 }
 
-li label {
+#taskBox label {
   margin: 0 40px;
 }
 
