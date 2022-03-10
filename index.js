@@ -13,7 +13,7 @@ addTaskBtn.addEventListener("click", (event) => {
   // create list element only if user filled up task name else prompt user
   if (inputElem.value) {
     const listID = todoList.children.length;
-    todoList.appendChild(createListElement(inputElem.value, listID));
+    todoList.appendChild(createListElement(inputElem.value, listID, ""));
     inputElem.value = "";
     popover.hide();
     document.getElementById("closeModal").click();
@@ -26,25 +26,31 @@ addTaskBtn.addEventListener("click", (event) => {
 function handleCheck(event) {
   const checkbox = event.target;
   const label = event.target.nextElementSibling;
+  console.log(label);
   if (checkbox.classList.contains("unchecked")) {
     checkbox.classList.remove("unchecked");
     checkbox.classList.add("checked");
     checkbox.src = "./assets/checkbox.svg";
     label.style.textDecoration = "line-through";
+    label.style.color = "#888";
     doneContainer.appendChild(event.target.parentElement);
   } else {
     checkbox.classList.remove("checked");
     checkbox.classList.add("unchecked");
     checkbox.src = "./assets/circle.svg";
     label.style.textDecoration = "none";
+    label.style.color = "#000";
     doContainer.appendChild(event.target.parentElement);
   }
 }
 
-function createListElement(label, listID) {
+function createListElement(label, listID, dueDate) {
   const task = document.createElement("div");
   const checkbox = document.createElement("img");
+  const container = document.createElement("div");
+  const labelContainer = document.createElement("div");
   const labelElem = document.createElement("label");
+  const dueDateElem = document.createElement("label");
   const editElem = document.createElement("img");
   const liModal = createTaskModal(listID, label);
 
@@ -58,12 +64,22 @@ function createListElement(label, listID) {
 
   labelElem.id = `label-${listID}`;
   labelElem.textContent = label;
-  labelElem.classList.add("col");
-  labelElem.classList.add("col-8");
 
+  dueDateElem.id = `due-${listID}`;
+  dueDateElem.textContent = dueDate ? dueDate : "";
+  dueDateElem.style.fontSize = "10px";
+
+  container.classList.add("col");
+  container.classList.add("col-8");
+  labelContainer.classList.add("row");
+  labelContainer.classList.add("row-cols-1");
+
+  editElem.id = "edit-" + listID;
   editElem.src = "./assets/pen-solid.svg";
   editElem.style.width = "20px";
   editElem.style.height = "20px";
+  editElem.style.opacity = 0.7;
+  editElem.style.visibility = "hidden";
   editElem.classList.add("col");
   editElem.setAttribute("data-bs-toggle", "modal");
   editElem.setAttribute("data-bs-target", `modal-${listID}`);
@@ -71,10 +87,21 @@ function createListElement(label, listID) {
 
   task.id = "task-" + listID;
   task.classList.add("row");
+  task.classList.add("align-items-center");
   task.classList.add("taskBox");
+  task.addEventListener("mouseenter", function (event) {
+    document.getElementById(`edit-${listID}`).style.visibility = "visible";
+  });
+  task.addEventListener("mouseleave", function (event) {
+    document.getElementById(`edit-${listID}`).style.visibility = "hidden";
+  });
+
+  labelContainer.appendChild(labelElem);
+  labelContainer.appendChild(dueDateElem);
+  container.appendChild(labelContainer);
 
   task.appendChild(checkbox);
-  task.appendChild(labelElem);
+  task.appendChild(container);
   task.appendChild(liModal);
   task.appendChild(editElem);
 
@@ -92,6 +119,8 @@ function createTaskModal(modalID, labelValue) {
   const closeBtn = document.createElement("button");
   const taskName = document.createElement("label");
   const taskInput = document.createElement("input");
+  const dateLabel = document.createElement("label");
+  const dateInput = document.createElement("input");
   const updateBtn = document.createElement("button");
   const deleteBtn = document.createElement("button");
 
@@ -103,6 +132,11 @@ function createTaskModal(modalID, labelValue) {
   modalContent.classList.add("modal-content");
   modalHeader.classList.add("modal-header");
   modalBody.classList.add("modal-body");
+  modalBody.classList.add("row");
+  modalBody.classList.add("row-cols-1");
+  modalBody.classList.add("gap-1");
+  modalBody.classList.add("mx-1");
+  // modalBody.classList.add("justify-content-around");
   modalFooter.classList.add("modal-footer");
   heading.classList.add("modal-title");
   closeBtn.classList.add("btn-close");
@@ -113,8 +147,16 @@ function createTaskModal(modalID, labelValue) {
   closeBtn.setAttribute("data-bs-dismiss", "modal");
 
   taskName.textContent = "Task name: ";
+  taskName.classList.add("g-0");
   taskInput.id = "input-" + modalID;
   taskInput.value = labelValue;
+  // taskInput.classList.add("col-11");
+
+  dateLabel.textContent = "Due Date: ";
+  dateLabel.classList.add("g-0");
+  dateInput.type = "date";
+  dateInput.id = "inputdate-" + modalID;
+  // dateInput.classList.add("col-11");
 
   updateBtn.textContent = "Update";
   updateBtn.type = "button";
@@ -132,6 +174,8 @@ function createTaskModal(modalID, labelValue) {
   modalHeader.appendChild(closeBtn);
   modalBody.appendChild(taskName);
   modalBody.appendChild(taskInput);
+  modalBody.appendChild(dateLabel);
+  modalBody.appendChild(dateInput);
   modalFooter.appendChild(deleteBtn);
   modalFooter.appendChild(updateBtn);
 
@@ -159,8 +203,14 @@ function handleUpdateTask(event) {
     );
   const newTask = document.getElementById(`input-${id}`);
   const labelElem = document.getElementById(`label-${id}`);
+  const inputDate = document.getElementById(`inputdate-${id}`);
 
   labelElem.textContent = newTask.value;
+  // check if user enters a date
+  if (inputDate) {
+    const dateElem = document.getElementById(`due-${id}`);
+    dateElem.textContent = "Due: " + inputDate.value;
+  }
 
   document.getElementById(`close-${id}`).click(); //close modal window
 }
