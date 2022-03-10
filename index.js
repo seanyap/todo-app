@@ -69,8 +69,9 @@ function createListElement(label, listID) {
   editElem.setAttribute("data-bs-target", `modal-${listID}`);
   editElem.addEventListener("click", openModal);
 
-  task.setAttribute("id", "taskBox");
+  task.id = "task-" + listID;
   task.classList.add("row");
+  task.classList.add("taskBox");
 
   task.appendChild(checkbox);
   task.appendChild(labelElem);
@@ -92,6 +93,7 @@ function createTaskModal(modalID, labelValue) {
   const taskName = document.createElement("label");
   const taskInput = document.createElement("input");
   const updateBtn = document.createElement("button");
+  const deleteBtn = document.createElement("button");
 
   modal.classList.add("modal");
   modal.classList.add("fade");
@@ -120,10 +122,17 @@ function createTaskModal(modalID, labelValue) {
   updateBtn.classList.add("btn-primary");
   updateBtn.addEventListener("click", handleUpdateTask);
 
+  deleteBtn.textContent = "Delete";
+  deleteBtn.type = "button";
+  deleteBtn.classList.add("btn");
+  deleteBtn.classList.add("btn-primary");
+  deleteBtn.addEventListener("click", handleDeleteTask);
+
   modalHeader.appendChild(heading);
   modalHeader.appendChild(closeBtn);
   modalBody.appendChild(taskName);
   modalBody.appendChild(taskInput);
+  modalFooter.appendChild(deleteBtn);
   modalFooter.appendChild(updateBtn);
 
   modalContent.appendChild(modalHeader);
@@ -143,13 +152,24 @@ function openModal(event) {
 }
 
 function handleUpdateTask(event) {
-  // get a reference to modal body get the new values user input so we can update
-  const modalBody = event.target.parentElement.previousSibling;
-  const id = modalBody.parentElement.parentElement.parentElement.id.slice(-1);
+  // get the new values from input to update our todo list
+  const id =
+    event.target.parentElement.previousSibling.parentElement.parentElement.parentElement.id.slice(
+      -1
+    );
   const newTask = document.getElementById(`input-${id}`);
   const labelElem = document.getElementById(`label-${id}`);
 
   labelElem.textContent = newTask.value;
 
-  document.getElementById(`close-${id}`).click();
+  document.getElementById(`close-${id}`).click(); //close modal window
+}
+
+function handleDeleteTask(event) {
+  const id =
+    event.target.parentElement.previousSibling.parentElement.parentElement.parentElement.id.slice(
+      -1
+    );
+  document.getElementById(`close-${id}`).click(); //close modal window
+  document.getElementById(`task-${id}`).remove();
 }

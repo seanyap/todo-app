@@ -20,8 +20,8 @@ body {
   padding: 0; /reset bootstrap auto left pad/
 } */
 
-#todo #taskBox,
-#done #taskBox {
+#todo .taskBox,
+#done .taskBox {
   padding: 15px;
   border: 2px solid #eee;
   border-radius: 10px;
@@ -46,11 +46,11 @@ input[type="checkbox"]:checked {
   /* border: none; */
 }
 
-#taskBox:hover {
+.taskBox:hover {
   background-color: #eee;
 }
 
-#taskBox label {
+.taskBox label {
   margin: 0 40px;
 }
 
