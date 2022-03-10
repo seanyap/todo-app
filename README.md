@@ -10,6 +10,6 @@ I have added several functionality for this application:
 
 Features that I hope to bring to the application:
 
-- [] drag and drop for tasks
-- [] ability to add subtasks for task
-- [] research for nicer color palette for call to action / priority code
+- [ ] drag and drop for tasks
+- [ ] ability to add subtasks for task
+- [ ] research for nicer color palette for call to action / priority code
