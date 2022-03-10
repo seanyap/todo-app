@@ -46,7 +46,7 @@ function createListElement(label, listID) {
   const checkbox = document.createElement("img");
   const labelElem = document.createElement("label");
   const editElem = document.createElement("img");
-  const liModal = createTaskModal(listID);
+  const liModal = createTaskModal(listID, label);
 
   checkbox.setAttribute("id", "checkbox");
   checkbox.setAttribute("name", "checkbox");
@@ -56,6 +56,7 @@ function createListElement(label, listID) {
   checkbox.style.backgroundSize = "contain";
   checkbox.addEventListener("click", handleCheck);
 
+  labelElem.id = `label-${listID}`;
   labelElem.textContent = label;
   labelElem.classList.add("col");
   labelElem.classList.add("col-8");
@@ -79,7 +80,7 @@ function createListElement(label, listID) {
   return task;
 }
 
-function createTaskModal(modalID) {
+function createTaskModal(modalID, labelValue) {
   const modal = document.createElement("div");
   const modalDialog = document.createElement("div"); // to set width and margin of modal
   const modalContent = document.createElement("div");
@@ -88,7 +89,9 @@ function createTaskModal(modalID) {
   const modalFooter = document.createElement("div");
   const heading = document.createElement("h5");
   const closeBtn = document.createElement("button");
-  const content = document.createElement("p");
+  const taskName = document.createElement("label");
+  const taskInput = document.createElement("input");
+  const updateBtn = document.createElement("button");
 
   modal.classList.add("modal");
   modal.classList.add("fade");
@@ -103,14 +106,25 @@ function createTaskModal(modalID) {
   closeBtn.classList.add("btn-close");
 
   heading.textContent = "Update Task";
+  closeBtn.id = "close-" + modalID;
   closeBtn.type = "button";
   closeBtn.setAttribute("data-bs-dismiss", "modal");
 
+  taskName.textContent = "Task name: ";
+  taskInput.id = "input-" + modalID;
+  taskInput.value = labelValue;
+
+  updateBtn.textContent = "Update";
+  updateBtn.type = "button";
+  updateBtn.classList.add("btn");
+  updateBtn.classList.add("btn-primary");
+  updateBtn.addEventListener("click", handleUpdateTask);
+
   modalHeader.appendChild(heading);
   modalHeader.appendChild(closeBtn);
-
-  content.textContent = "test body";
-  modalBody.appendChild(content);
+  modalBody.appendChild(taskName);
+  modalBody.appendChild(taskInput);
+  modalFooter.appendChild(updateBtn);
 
   modalContent.appendChild(modalHeader);
   modalContent.appendChild(modalBody);
@@ -126,4 +140,16 @@ function openModal(event) {
   const modalID = event.target.getAttribute("data-bs-target");
   const modal = new bootstrap.Modal(document.getElementById(modalID));
   modal.show();
+}
+
+function handleUpdateTask(event) {
+  // get a reference to modal body get the new values user input so we can update
+  const modalBody = event.target.parentElement.previousSibling;
+  const id = modalBody.parentElement.parentElement.parentElement.id.slice(-1);
+  const newTask = document.getElementById(`input-${id}`);
+  const labelElem = document.getElementById(`label-${id}`);
+
+  labelElem.textContent = newTask.value;
+
+  document.getElementById(`close-${id}`).click();
 }
